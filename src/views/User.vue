@@ -1,11 +1,8 @@
 <template>
   <div class="container">
-    <h1>Home</h1>
-
-
-    <div class="link__container" v-if="!state">
-      <router-link to="/login">ログイン</router-link> |
-      <router-link to="/register">新規登録</router-link>
+    <h2>User</h2>
+    <button @click="signOut" class="btn" >SignOut</button>
+    <div class="logged">
     </div>
 
     <ul>
@@ -18,16 +15,17 @@
 
 <script>
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import 'firebase/firestore'
 
 export default {
-  name: 'Home',
+  name: 'User',
 
   data() {
     return {
       db: null,
       todosRef: null,
-      todos: {},
+      todos: {}
     }
   },
 
@@ -41,18 +39,36 @@ export default {
       })
       this.todos = obj
     })
-
-    this.$store.commit('changeLoginState')
-    this.state = this.$store.state.loginState
- 
   },
+  
+  methods: {
+   signOut() {
+      try {
+        firebase.auth().signOut();
+        this.$router.go({ name: 'Home' });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  }
 }
 </script>
 
 <style scoped>
-.container{
+h2 {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
   display: flex;
   flex-flow: column;
-  align-items: center;
+  margin: 0 auto;
+  width: 4rem;
+}
+
+.logged {
+  display: flex;
+  justify-content: center;
 }
 </style>
